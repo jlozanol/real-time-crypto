@@ -4,13 +4,7 @@ build:
 run: build
 	docker run -it --network redpanda_network \
 	--env KAFKA_BROKER_ADDRESS=redpanda-0:9092 \
-	trade-producer
-
-start-redpanda:
-	docker compose -f redpanda.yml up -d
-
-stop-redpanda:
-	docker compose -f redpanda.yml down
+	trade-to-ohlc
 
 lint:
 	ruff check --fix

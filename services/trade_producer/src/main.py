@@ -53,5 +53,5 @@ if __name__ == '__main__':
 	produce_trades(
 		kafka_broker_address=config.kafka_broker_address,
 		kafka_topic_name=config.kafka_topic_name,
-		product_id=config.product_id
+		product_id=config.product_id,
 	)
