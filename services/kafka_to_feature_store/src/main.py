@@ -1,6 +1,11 @@
-from quixstreams import Application
 import json
+
 from loguru import logger
+from quixstreams import Application
+
+from src.config import config
+from src.hopsworks_api import push_data_to_feature_store
+
 
 def kafka_to_feature_store(
         kafka_topic: str,
@@ -46,6 +51,8 @@ def kafka_to_feature_store(
                 # Parse the message from Kafka into a dictionary
                 ohlc = json.loads(msg.value().decode('utf-8'))
 
+                logger.debug(f'Received message: {ohlc}')
+
                 # Write the data into the feature store
                 push_data_to_feature_store(
                     feature_group_name=feature_group_name,
@@ -53,12 +60,18 @@ def kafka_to_feature_store(
                     data=ohlc
                 )
 
-            breakpoint()
+            # Store the offset of the processed message on the Consumer
+            # for the auto-commit mechanism.
+            # It will send it to Kafka in the background.
+            # Storing offset only after the message is processed enables
+            # at-least-once delivery guarantees.
+            consumer.store_offsets(message=msg)
+
 
 if __name__ == '__main__':
     kafka_to_feature_store(
-        kafka_topic='ohlc',
-        kafka_broker_address='localhost:19092',
-        feature_group_name='ohlc_feature_group',
-        feature_group_version=1
+        kafka_topic=config.kafka_topic,
+        kafka_broker_address=config.kafka_broker_address,
+        feature_group_name=config.feature_group_name,
+        feature_group_version=config.feature_group_version
     )
