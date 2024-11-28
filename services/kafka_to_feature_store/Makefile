@@ -4,6 +4,7 @@ build:
 run: build
 	docker run -it --network redpanda_network \
 	--env KAFKA_BROKER_ADDRESS=redpanda-0:9092 \
+	--env-file .env \
 	kafka-to-feature-store
 
 lint:

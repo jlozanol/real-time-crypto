@@ -43,21 +43,6 @@ class KrakenWebsocketTradeAPI:
 		_ = self._ws.recv()
 
 	def get_trades(self) -> List[Dict]:
-		# mock_trades = [
-		#     {
-		#         'product_id': 'BTC-USD',
-		#         'price': 60000,
-		#         'volume': 0.01,
-		#         'timestamp': 1630000000
-		#     },
-		#     {
-		#         'product_id': 'BTC-USD',
-		#         'price': 59000,
-		#         'volume': 0.01,
-		#         'timestamp': 1640000000
-		#     }
-		# ]
-
 		message = self._ws.recv()
 
 		if 'heartbeat' in message:
